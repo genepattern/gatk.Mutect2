@@ -97,6 +97,84 @@ def parse_args_tolerant(argv):
 # helpers
 # ---------------------------
 
+def is_bgzf(path: str) -> bool:
+    """
+    Detect BGZF vs regular gzip by inspecting the gzip extra subfields.
+    BGZF is gzip with FEXTRA and subfield 'BC'.
+    """
+    p = Path(path)
+    if not p.exists() or p.is_dir():
+        return False
+
+    try:
+        with open(p, "rb") as fh:
+            hdr = fh.read(64)
+        if len(hdr) < 18:
+            return False
+
+        # gzip magic
+        if hdr[0:2] != b"\x1f\x8b":
+            return False
+        # compression method must be deflate
+        if hdr[2] != 8:
+            return False
+
+        flg = hdr[3]
+        FEXTRA = 0x04
+        if (flg & FEXTRA) == 0:
+            return False
+
+        # skip basic header: 10 bytes
+        xlen = int.from_bytes(hdr[10:12], "little")
+        # Extra field begins at byte 12, length xlen
+        extra = hdr[12:12 + xlen]
+        i = 0
+        while i + 4 <= len(extra):
+            si1 = extra[i:i+1]
+            si2 = extra[i+1:i+2]
+            slen = int.from_bytes(extra[i+2:i+4], "little")
+            sub = extra[i+4:i+4+slen]
+            if si1 == b"B" and si2 == b"C":
+                return True
+            i += 4 + slen
+        return False
+    except Exception:
+        return False
+
+
+def ensure_uncompressed_fasta(ref: str, dry: bool = False) -> str:
+    """
+    If ref is a regular gzip FASTA (not BGZF), decompress to .fa and return that path.
+    If ref is BGZF or uncompressed, return ref unchanged.
+    """
+    if not ref:
+        return ref
+
+    ref_path = Path(ref)
+
+    # If already uncompressed, keep it
+    if ref_path.suffix != ".gz":
+        return ref
+
+    # If BGZF, keep as-is
+    if is_bgzf(ref):
+        print(f"[info] Reference is BGZF; keeping as-is: {ref}")
+        return ref
+
+    # Regular gzip -> decompress to .fa next to it
+    out_path = Path(str(ref_path)[:-3])  # strip ".gz" -> ".fa"
+    if out_path.exists():
+        print(f"[info] Using existing uncompressed reference: {out_path}")
+        return str(out_path)
+
+    print(f"[info] Reference is plain gzip; decompressing to: {out_path}")
+    cmd = shlex.join(["bash", "-lc", f"gzip -dc {shlex.quote(str(ref_path))} > {shlex.quote(str(out_path))}"])
+    rc = run(cmd, dry=dry)
+    if rc != 0 and not dry:
+        fail(f"Failed to decompress reference FASTA: {ref_path} -> {out_path}")
+
+    return str(out_path)
+
 def fail(msg, code=2):
     print(f"[error] {msg}", file=sys.stderr)
     sys.exit(code)
@@ -324,6 +402,9 @@ def main():
     gatk = opt["gatk"] or "gatk"
     pairhmm_threads = int(opt["pairhmm_threads"] or "4")
     dry = bool(opt["dry_run"])
+
+    # If reference is plain gzip, decompress first
+    opt["ref"] = ensure_uncompressed_fasta(opt["ref"], dry=dry)
 
     # Ensure indices/dicts for all key inputs
     print("[info] Ensuring reference indices (.fai/.dict)...")

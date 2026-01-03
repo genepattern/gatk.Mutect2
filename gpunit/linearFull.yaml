@@ -7,7 +7,7 @@ module: Mutect2
 params: 
     "Reference": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz"
     "Tumor.BAM": "inputs/HG008T.sorted.bam"
-    "Output": "out"
+    "Output": "mutect2_testLF"
     "Tumor.sample": "HG008-T"
     "Normal.BAM": "inputs/HG008ND.sorted.bam"
     "Normal.sample": "HG008-N-D"
@@ -19,11 +19,11 @@ params:
 assertions: 
     jobStatus: success
     files: 
-        out.f1r2.tar.gz: !!null
-        out.f1r2_manifest.txt: !!null
-        out.unfiltered.vcf.gz: !!null
-        out.unfiltered.vcf.gz.stats: !!null
-        out.unfiltered.vcf.gz.tbi: !!null
+        mutect2_testLF.f1r2.tar.gz: !!null
+        mutect2_testLF.f1r2_manifest.txt: !!null
+        mutect2_testLF.unfiltered.vcf.gz: !!null
+        mutect2_testLF.unfiltered.vcf.gz.stats: !!null
+        mutect2_testLF.unfiltered.vcf.gz.tbi: !!null
         stderr.txt: !!null
         stdout.txt: !!null
         gp_execution_log.txt: !!null
