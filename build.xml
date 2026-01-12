@@ -7,7 +7,7 @@
     <antcall target="prezip"/>
     <zip destfile="${dest.dir}/${ant.project.name}.zip" whenempty="fail" defaultexcludes="true">
         <fileset dir="." includes="manifest"/>
-        <!-- zipfileset dir="src" includes="*.py"/-->
+        <fileset dir="src" includes="*.py"/>
     </zip>
     <antcall target="postzip"/>
 </target>
