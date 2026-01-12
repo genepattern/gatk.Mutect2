@@ -28,7 +28,7 @@ p10_prefix=
 p10_prefix_when_specified=
 p10_type=java.lang.String
 p10_userSuppliedValuesOK=True
-p10_value=-S\=-S; \=No
+p10_value=-S\=Yes; \=No
 p1_MODE=IN
 p1_TYPE=FILE
 p1_default_value=
