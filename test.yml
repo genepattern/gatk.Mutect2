@@ -1,0 +1,10 @@
+name: "Mutect2 - Basic Somatic Variant Calling"
+module: Mutect2
+params:
+  tumor.bam: /Users/tmtabor/workspace/module-toolkit/generated-modules/mutect2_20260317_132714/data/HG008T.sorted.bam
+  reference: /Users/tmtabor/workspace/module-toolkit/generated-modules/mutect2_20260317_132714/data/hg38.fa
+
+assertions:
+  diffCmd: diff <%gpunit.diffStripTrailingCR%> -q
+  files:
+    - output.vcf.gz
