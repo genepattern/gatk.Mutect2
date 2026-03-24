@@ -1,6 +1,6 @@
 # GenePattern Module Manifest
 
-LSID=urn:lsid:broad.mit.edu:cancer.software.genepattern.module.generated:49498:1
+LSID=urn:lsid:genepattern.org:module.analysis:00481:2
 name=gatk.Mutect2
 version=2
 author=GenePattern Team
