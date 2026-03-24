@@ -9,7 +9,7 @@
 
 ## Summary
 
-**Mutect2** is a GenePattern module wrapping the GATK (Genome Analysis Toolkit) Mutect2 somatic variant caller. It detects somatic mutations — genetic changes present in tumor tissue but absent from the germline — by performing local *de novo* haplotype assembly over active genomic regions and scoring candidate variants with a Bayesian somatic genotyping model.
+**gatk.Mutect2** is a GenePattern module wrapping the GATK (Genome Analysis Toolkit) Mutect2 somatic variant caller. It detects somatic mutations — genetic changes present in tumor tissue but absent from the germline — by performing local *de novo* haplotype assembly over active genomic regions and scoring candidate variants with a Bayesian somatic genotyping model.
 
 ### What problem does it solve?
 

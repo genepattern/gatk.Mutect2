@@ -1,8 +1,8 @@
 # GenePattern Module Manifest
 
 LSID=urn:lsid:broad.mit.edu:cancer.software.genepattern.module.generated:49498:1
-name=Mutect2
-version=1.0.0
+name=gatk.Mutect2
+version=2
 author=GenePattern Team
 description=Calls somatic short variants (SNVs and indels) from tumor DNA sequencing data using local haplotype assembly and a Bayesian somatic genotyping engine. Supports tumor-normal paired mode and tumor-only mode. Automatically checks for and generates required companion index files (.bai, .tbi, .fai, .dict). Optionally runs integrated post-processing steps including FilterMutectCalls and LearnReadOrientationModel for FFPE/NovaSeq samples.
 categories=SNPAnalysis;VariantCalling;Somatic
